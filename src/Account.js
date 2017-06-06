@@ -20,6 +20,7 @@ class Account extends Component {
 
   componentDidMount() {
     // alert("Component Mounted");
+    if (!this.accountService.IsUserLoggedIn()) return;
     this.accountService.PreformGetAccount(this.state.authUser.id, this.state.authUser.authToken, this.apiCallCompleted);
   }
 
@@ -30,7 +31,6 @@ class Account extends Component {
     }
     else { // If no errors, it completed successfully
       this.setState({user: response});
-      this.forceUpdate();
     }
   }
 
