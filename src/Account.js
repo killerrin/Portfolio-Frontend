@@ -8,8 +8,30 @@ class Account extends Component {
     this.accountService = new AccountService();
 
     this.state = {
-      user : this.accountService.GetLoggedInUser()
+      authUser : this.accountService.GetLoggedInUser(),
+      user: {id:0, username:"", email:""},
+
+      error: ""
     };
+
+    this.componentDidMount = this.componentDidMount.bind(this);
+    this.apiCallCompleted = this.apiCallCompleted.bind(this);
+  }
+
+  componentDidMount() {
+    // alert("Component Mounted");
+    this.accountService.PreformGetAccount(this.state.authUser.id, this.state.authUser.authToken, this.apiCallCompleted);
+  }
+
+  apiCallCompleted(response) {
+    //alert(response);
+    if (typeof response === 'string' || response instanceof String) { // Check for Errors
+      this.setState({error: response});
+    }
+    else { // If no errors, it completed successfully
+      this.setState({user: response});
+      this.forceUpdate();
+    }
   }
 
   render() {
@@ -18,9 +40,10 @@ class Account extends Component {
 
     return (
       <div>
-        <p>{this.state.user.id}</p>
-        <p>{this.state.user.username}</p>
-        <p>{this.state.user.authToken}</p>
+        <p>{this.state.authUser.id}</p>
+        <p>{this.state.authUser.username}</p>
+        <p>{this.state.user.email}</p>
+        <p>{this.state.authUser.authToken}</p>
       </div>
     );
   }

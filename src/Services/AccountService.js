@@ -17,6 +17,33 @@ class AccountService extends APIService {
         return userCookie;
     };
 
+    PreformGetAccount(id, authToken, onComplete) {
+        var apiUrl = this.APIBaseUrl + "/Account/" + id;
+        //alert(id + "|" + authToken + "|" + apiUrl);
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (this.readyState != 4) return;
+            if (this.status == 200) {
+                var user = JSON.parse(this.responseText);
+                //alert("Data Loaded: " + user);
+                if (onComplete != null) {
+                    onComplete(user);
+                }    
+            }
+            else {
+                if (onComplete != null) {
+                    onComplete(this.responseText);
+                }
+            }
+        }; // end of state change: it can be after some time (async)
+        xhr.onerror
+        xhr.open("GET", apiUrl, true);
+        xhr.setRequestHeader('Accept', 'application/json');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('Authorization', authToken);
+        xhr.send();
+    };
+
     PreformLogin(username, password, onComplete) {
         var apiUrl = this.APIBaseUrl + "/Authentication";
         //alert(username + "|" + password + "|" + apiUrl);
