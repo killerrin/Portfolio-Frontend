@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import AccountService from './Services/AccountService';
+import AccountService, {UserCreate} from './Services/AccountService';
 import Cookies from 'js-cookie';
 
 import './AccountLoginRegister.css';
@@ -35,7 +35,7 @@ class AccountRegister extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.accountService.PreformRegister(this.state.username, this.state.email, this.state.password, this.apiCallCompleted);
+    this.accountService.PreformRegister(new UserCreate(this.state.username, this.state.email, this.state.password), this.apiCallCompleted);
   }
 
   apiCallCompleted(response) {

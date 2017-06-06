@@ -2,6 +2,35 @@ import $ from 'jquery'
 import APIService from './APIService'
 import Cookies from 'js-cookie';
 
+class UserLogin {
+    constructor(username, password) {
+        this.username = username;
+        this.password = password;
+    };
+};
+class UserCreate {
+    constructor(username, email, password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    };
+};
+class UserAuth {
+        constructor(id, username, authToken) {
+        this.id = id;
+        this.username = username;
+        this.authToken = authToken;
+    };
+};
+class UserUpdate {
+    constructor(currentPassword, newUsername, newEmail, newPassword) {
+        this.currentPassword = currentPassword;
+        this.newUsername = newUsername;
+        this.newEmail = newEmail;
+        this.newPassword = newPassword;
+    };
+};
+
 class AccountService extends APIService {
     IsUserLoggedIn() {
         var user = this.GetLoggedInUser();
@@ -34,22 +63,13 @@ class AccountService extends APIService {
                     onComplete(this.responseText);
                 }
             }
-        }; // end of state change: it can be after some time (async)
+        };
         xhr.open("GET", apiUrl, true);
         xhr.setRequestHeader('Accept', 'application/json');
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.setRequestHeader('Authorization', authToken);
         xhr.send();
     };
-
-    CreateUserUpdateData(currentPassword, newUsername, newEmail, newPassword) {
-        return ({
-            currentPassword: currentPassword,
-            newUsername: newUsername,
-            newEmail: newEmail,
-            newPassword: newPassword
-        });
-    }
 
     PreformUpdateAccount(id, authToken, userUpdateData, onComplete) {
         var apiUrl = this.APIBaseUrl + "/Account/" + id;
@@ -69,17 +89,18 @@ class AccountService extends APIService {
                     onComplete(this.responseText);
                 }
             }
-        }; // end of state change: it can be after some time (async)
+        };
         xhr.open("PUT", apiUrl, true);
         xhr.setRequestHeader('Accept', 'application/json');
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.setRequestHeader('Authorization', authToken);
-        xhr.send(JSON.stringify({
-            currentPassword: userUpdateData.currentPassword,
-            newUsername: userUpdateData.newUsername,
-            newEmail: userUpdateData.newEmail,
-            newPassword: userUpdateData.newPassword
-        }));
+        xhr.send(JSON.stringify(userUpdateData));
+        //{
+        //    currentPassword: userUpdateData.currentPassword,
+        //    newUsername: userUpdateData.newUsername,
+        //    newEmail: userUpdateData.newEmail,
+        //    newPassword: userUpdateData.newPassword
+        //}));
     };
 
     PreformDeleteAccount(id, authToken, onComplete) {
@@ -93,7 +114,7 @@ class AccountService extends APIService {
                     onComplete(this.responseText);
                 } 
             }
-        }; // end of state change: it can be after some time (async)
+        };
         xhr.open("DELETE", apiUrl, true);
         xhr.setRequestHeader('Accept', 'application/json');
         xhr.setRequestHeader('Content-Type', 'application/json');
@@ -110,7 +131,7 @@ class AccountService extends APIService {
             if (onComplete !== null) {
                 onComplete(this.responseText);
             } 
-        }; // end of state change: it can be after some time (async)
+        };
         xhr.open("POST", apiUrl, true);
         xhr.setRequestHeader('Accept', 'application/json');
         xhr.setRequestHeader('Content-Type', 'application/json');
@@ -118,7 +139,7 @@ class AccountService extends APIService {
         xhr.send();
     };
 
-    PreformLogin(username, password, onComplete) {
+    PreformLogin(userLoginData, onComplete) {
         var apiUrl = this.APIBaseUrl + "/Authentication";
         //alert(username + "|" + password + "|" + apiUrl);
         var xhr = new XMLHttpRequest();
@@ -136,17 +157,14 @@ class AccountService extends APIService {
                     onComplete(this.responseText);
                 }
             }
-        }; // end of state change: it can be after some time (async)
+        };
         xhr.open("POST", apiUrl, true);
         xhr.setRequestHeader('Accept', 'application/json');
         xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify({
-            username: username,
-            password: password
-        }));
+        xhr.send(JSON.stringify(userLoginData));
     };
 
-    PreformRegister(username, email, password, onComplete) {
+    PreformRegister(userRegisterData, onComplete) {
         var apiUrl = this.APIBaseUrl + "/Account";
         //alert(username + "|" + email + "|" + password + "|" + this.APIBaseUrl + "/Account");
         $.ajax({
@@ -156,13 +174,8 @@ class AccountService extends APIService {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json' 
             },
-            data: {
-                username: username,
-                email: email,
-                password: password
-            },
+            data: userRegisterData, 
             contentType: "application/json",
-            //contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (response) {
                 var authenticatedUser = JSON.parse(response);
@@ -181,3 +194,4 @@ class AccountService extends APIService {
     };
 };
 export default AccountService;
+export {UserLogin, UserCreate, UserAuth, UserUpdate };
