@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import AccountService from './Services/AccountService';
+import Cookies from 'js-cookie';
 
 import './AccountLoginRegister.css';
 
@@ -38,13 +39,13 @@ class AccountRegister extends Component {
   }
 
   apiCallCompleted(response) {
-      // alert(response);
-      if (typeof response === 'string' || response instanceof String) {
-        this.setState({error: response});
-      }
-      else {
-
-      }
+    // alert(response);
+    if (typeof response === 'string' || response instanceof String) { // Check for Errors
+      this.setState({error: response});
+    }
+    else { // If no errors, it completed successfully
+        Cookies.set("user", response);
+    }
   }
 
   render() {

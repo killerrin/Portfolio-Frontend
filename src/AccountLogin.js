@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import AccountService from './Services/AccountService';
 
 import './AccountLoginRegister.css';
@@ -37,14 +38,19 @@ class AccountLogin extends Component {
     this.accountService.PreformLogin(this.state.username, this.state.password, this.apiCallCompleted);
   }
 
-    apiCallCompleted(response) {
-      alert(response);
-      if (typeof response === 'string' || response instanceof String) {
-        this.setState({error: response});
+  apiCallCompleted(response) {
+    //alert(response);
+    if (typeof response === 'string' || response instanceof String) { // Check for Errors
+      this.setState({error: response});
+    }
+    else { // If no errors, it completed successfully
+      if (this.state.rememberMe) { // Set Expiry Date to a year away
+        Cookies.set("user", response, { expires: 365 });
       }
-      else {
-
+      else { // Use default as it will clear on browser close
+        Cookies.set("user", response);
       }
+    }
   }
 
   render() {
