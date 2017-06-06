@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import AccountService from './Services/AccountService';
 import Cookies from 'js-cookie';
 
@@ -45,10 +45,14 @@ class AccountRegister extends Component {
     }
     else { // If no errors, it completed successfully
         Cookies.set("user", response);
+        this.forceUpdate();
     }
   }
 
   render() {
+    if (this.accountService.IsUserLoggedIn())
+      return(<Redirect to="/account"/>)
+
     return (
       <div className="container">
         <form className="form-signin" onSubmit={this.handleSubmit}>

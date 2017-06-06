@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import AccountService from './Services/AccountService';
 
@@ -50,10 +50,15 @@ class AccountLogin extends Component {
       else { // Use default as it will clear on browser close
         Cookies.set("user", response);
       }
+
+      this.forceUpdate();
     }
   }
 
   render() {
+    if (this.accountService.IsUserLoggedIn())
+      return(<Redirect to="/account"/>)
+
     return (
       <div className="container">
         <form className="form-signin" onSubmit={this.handleSubmit}>
