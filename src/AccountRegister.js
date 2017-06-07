@@ -35,7 +35,7 @@ class AccountRegister extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.accountService.PreformRegister(new UserCreate(this.state.username, this.state.email, this.state.password));
+    this.accountService.PreformCreateAccount(new UserCreate(this.state.username, this.state.email, this.state.password));
   }
 
   apiCallCompleted(response) {

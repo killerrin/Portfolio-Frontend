@@ -105,58 +105,7 @@ class AccountService extends APIService {
         xhr.send();
     };
 
-    PreformCheckAuthentication(id, authToken) {
-        var self = this;
-        var apiUrl = this.APIBaseUrl + "/Authentication/" + id;
-        //alert(id + "|" + authToken + "|" + apiUrl);
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function () {
-            if (this.readyState !== 4) return;
-            if (this.status === 200) {
-                if (self.onComplete !== null) {
-                    self.onComplete(this.responseText);
-                }
-            }
-            else {
-                if (self.onFailed !== null) {
-                    self.onFailed(this.responseText);
-                }
-            }
-        };
-        xhr.open("POST", apiUrl, true);
-        xhr.setRequestHeader('Accept', 'application/json');
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.setRequestHeader('Authorization', authToken);
-        xhr.send();
-    };
-
-    PreformLogin(userLoginData) {
-        var self = this;
-        var apiUrl = this.APIBaseUrl + "/Authentication";
-        //alert(username + "|" + password + "|" + apiUrl);
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function () {
-            if (this.readyState !== 4) return;
-            if (this.status === 200) {
-                var authenticatedUser = JSON.parse(this.responseText);
-                //alert("Data Loaded: " + authenticatedUser);
-                if (self.onComplete !== null) {
-                    self.onComplete(authenticatedUser);
-                }    
-            }
-            else {
-                if (self.onFailed !== null) {
-                    self.onFailed(this.responseText);
-                }
-            }
-        };
-        xhr.open("POST", apiUrl, true);
-        xhr.setRequestHeader('Accept', 'application/json');
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify(userLoginData));
-    };
-
-    PreformRegister(userRegisterData) {
+    PreformCreateAccount(userRegisterData) {
         var self = this;
         var apiUrl = this.APIBaseUrl + "/Account";
         //alert(username + "|" + email + "|" + password + "|" + this.APIBaseUrl + "/Account");
@@ -187,24 +136,11 @@ class AccountService extends APIService {
     };
 };
 
-class UserLogin {
-    constructor(username, password) {
-        this.username = username;
-        this.password = password;
-    };
-};
 class UserCreate {
     constructor(username, email, password) {
         this.username = username;
         this.email = email;
         this.password = password;
-    };
-};
-class UserAuth {
-        constructor(id, username, authToken) {
-        this.id = id;
-        this.username = username;
-        this.authToken = authToken;
     };
 };
 class UserUpdate {
@@ -217,4 +153,4 @@ class UserUpdate {
 };
 
 export default AccountService;
-export {UserLogin, UserCreate, UserAuth, UserUpdate };
+export {UserCreate, UserUpdate };
