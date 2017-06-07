@@ -5,7 +5,10 @@ import AccountService from './Services/AccountService';
 class Account extends Component {
   constructor(props) {
     super(props);
-    this.accountService = new AccountService();
+    this.componentDidMount = this.componentDidMount.bind(this);
+    this.apiCallCompleted = this.apiCallCompleted.bind(this);
+    this.apiCallFailed = this.apiCallFailed.bind(this);
+    this.accountService = new AccountService(this.apiCallCompleted, this.apiCallFailed);
 
     this.state = {
       authUser : this.accountService.GetLoggedInUser(),
@@ -13,25 +16,21 @@ class Account extends Component {
 
       error: ""
     };
-
-    this.componentDidMount = this.componentDidMount.bind(this);
-    this.apiCallCompleted = this.apiCallCompleted.bind(this);
   }
 
   componentDidMount() {
     // alert("Component Mounted");
     if (!this.accountService.IsUserLoggedIn()) return;
-    this.accountService.PreformGetAccount(this.state.authUser.id, this.state.authUser.authToken, this.apiCallCompleted);
+    this.accountService.PreformGetAccount(this.state.authUser.id, this.state.authUser.authToken);
   }
 
   apiCallCompleted(response) {
     //alert(response);
-    if (typeof response === 'string' || response instanceof String) { // Check for Errors
-      this.setState({error: response});
-    }
-    else { // If no errors, it completed successfully
-      this.setState({user: response});
-    }
+    this.setState({user: response});
+  }
+  apiCallFailed(response) {
+    //alert(response);
+    this.setState({error: response});
   }
 
   render() {

@@ -6,7 +6,6 @@ import Cookies from 'js-cookie';
 import './AccountLoginRegister.css';
 
 class AccountRegister extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -17,10 +16,11 @@ class AccountRegister extends Component {
       error: ""
     };
 
-    this.accountService = new AccountService();
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.apiCallCompleted = this.apiCallCompleted.bind(this);
+    this.apiCallFailed = this.apiCallFailed.bind(this);
+    this.accountService = new AccountService(this.apiCallCompleted, this.apiCallFailed);
   }
 
   handleInputChange(event) {
@@ -35,18 +35,17 @@ class AccountRegister extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.accountService.PreformRegister(new UserCreate(this.state.username, this.state.email, this.state.password), this.apiCallCompleted);
+    this.accountService.PreformRegister(new UserCreate(this.state.username, this.state.email, this.state.password));
   }
 
   apiCallCompleted(response) {
     // alert(response);
-    if (typeof response === 'string' || response instanceof String) { // Check for Errors
-      this.setState({error: response});
-    }
-    else { // If no errors, it completed successfully
-        Cookies.set("user", response);
-        this.forceUpdate();
-    }
+    Cookies.set("user", response);
+    this.forceUpdate();
+  }
+  apiCallFailed(response) {
+    // alert(response);
+    this.setState({error: response});
   }
 
   render() {

@@ -16,10 +16,11 @@ class AccountLogin extends Component {
       error: ""
     };
 
-    this.accountService = new AccountService();
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.apiCallCompleted = this.apiCallCompleted.bind(this);
+    this.apiCallFailed = this.apiCallFailed.bind(this);
+    this.accountService = new AccountService(this.apiCallCompleted, this.apiCallFailed);
   }
 
   handleInputChange(event) {
@@ -34,24 +35,23 @@ class AccountLogin extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.accountService.PreformLogin(new UserLogin(this.state.username, this.state.password), this.apiCallCompleted);
+    this.accountService.PreformLogin(new UserLogin(this.state.username, this.state.password));
   }
 
   apiCallCompleted(response) {
     //alert(response);
-    if (typeof response === 'string' || response instanceof String) { // Check for Errors
-      this.setState({error: response});
+    if (this.state.rememberMe) { // Set Expiry Date to a year away
+      Cookies.set("user", response, { expires: 365 });
     }
-    else { // If no errors, it completed successfully
-      if (this.state.rememberMe) { // Set Expiry Date to a year away
-        Cookies.set("user", response, { expires: 365 });
-      }
-      else { // Use default as it will clear on browser close
-        Cookies.set("user", response);
-      }
+    else { // Use default as it will clear on browser close
+      Cookies.set("user", response);
+    }
 
-      this.forceUpdate();
-    }
+    this.forceUpdate();
+  }
+  apiCallFailed(response) {
+    //alert(response);
+    this.setState({error: response});
   }
 
   render() {
