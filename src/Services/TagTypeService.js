@@ -1,14 +1,14 @@
 import $ from 'jquery'
 import APIService from './APIService'
 
-class TagService extends APIService {
+class TagTypeService extends APIService {
     constructor(onComplete, onFailed) {
         super(onComplete, onFailed);
     }
 
-    PreformGetAllTags() {
+    PreformGetAllTagTypes() {
         var self = this;
-        var apiUrl = this.APIBaseUrl + "/Tag";
+        var apiUrl = this.APIBaseUrl + "/TagType";
         //alert(apiUrl);
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
@@ -31,9 +31,9 @@ class TagService extends APIService {
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send();
     };
-    PreformGetTag(id) {
+    PreformGetTagType(id) {
         var self = this;
-        var apiUrl = this.APIBaseUrl + "/Tag/" + id;
+        var apiUrl = this.APIBaseUrl + "/TagType/" + id;
         //alert(id + "|" + apiUrl);
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
@@ -56,10 +56,10 @@ class TagService extends APIService {
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send();
     };
-    PreformCreateTag(name, tagTypeID, authToken) {
+    PreformCreateTagType(name, authToken) {
         var self = this;
-        var apiUrl = this.APIBaseUrl + "/Tag";
-        //alert(name + "|" + tagTypeID + "|" + authToken + "|" + apiUrl);
+        var apiUrl = this.APIBaseUrl + "/TagType";
+        //alert(name + "|" + authToken + "|" + apiUrl);
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if (this.readyState !== 4) return;
@@ -80,15 +80,12 @@ class TagService extends APIService {
         xhr.setRequestHeader('Accept', 'application/json');
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.setRequestHeader('Authorization', authToken);
-        xhr.send(JSON.stringify({
-            name: name,
-            tagTypeID: tagTypeID
-        }));
+        xhr.send(JSON.stringify({name:name}));
     };
-    PreformUpdateTag(id, name, tagTypeID, authToken) {
+    PreformUpdateTagType(id, name, authToken) {
         var self = this;
-        var apiUrl = this.APIBaseUrl + "/Tag/" + id;
-        //alert(id + "|" + name + "|" + tagTypeID + "|" + authToken + "|" + apiUrl);
+        var apiUrl = this.APIBaseUrl + "/TagType/" + id;
+        //alert(id + "|" + name + "|" + authToken + "|" + apiUrl);
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if (this.readyState !== 4) return;
@@ -111,13 +108,12 @@ class TagService extends APIService {
         xhr.setRequestHeader('Authorization', authToken);
         xhr.send(JSON.stringify({
             id: id,
-            name: name,
-            tagTypeID: tagTypeID
+            name:name
         }));
     };
-    PreformDeleteTag(id, authToken) {
+    PreformDeleteTagType(id, authToken) {
         var self = this;
-        var apiUrl = this.APIBaseUrl + "/Tag/" + id;
+        var apiUrl = this.APIBaseUrl + "/TagType/" + id;
         //alert(id + "|" + authToken + "|" + apiUrl);
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
@@ -143,4 +139,4 @@ class TagService extends APIService {
     };
 };
 
-export default TagService;
+export default TagTypeService;
