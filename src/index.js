@@ -1,5 +1,4 @@
-// import jQuery from 'jquery'
-import $ from 'jquery'
+// import $ from 'jquery'
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter, Switch, Route } from 'react-router-dom';
@@ -14,6 +13,7 @@ import PortfolioItem from './PortfolioItem';
 import Account from './Account';
 import AccountLogin from './AccountLogin';
 import AccountRegister from './AccountRegister';
+import AccountLogout from './AccountLogout';
 import Admin from './Admin';
 import App from './App';
 
@@ -33,6 +33,7 @@ ReactDOM.render((
           <Route exact path='/account' component={Account}/>
           <Route exact path='/account/login' component={AccountLogin}/>
           <Route exact path='/account/register' component={AccountRegister}/>
+          <Route exact path='/account/logout' component={AccountLogout}/>
           <Route exact path='/admin' component={Admin}/>
           <Route exact path='/app' component={App}/>
       </Switch>
