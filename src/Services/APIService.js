@@ -4,7 +4,6 @@ class APIService {
         this.onComplete = onComplete;
         this.onFailed = onFailed;
     };
-
-
 };
+
 export default APIService;
