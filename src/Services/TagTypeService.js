@@ -1,4 +1,3 @@
-import $ from 'jquery'
 import APIService from './APIService'
 
 class TagTypeService extends APIService {

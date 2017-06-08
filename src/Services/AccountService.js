@@ -1,4 +1,3 @@
-import $ from 'jquery'
 import APIService from './APIService'
 import Cookies from 'js-cookie';
 
@@ -109,30 +108,26 @@ class AccountService extends APIService {
         var self = this;
         var apiUrl = this.APIBaseUrl + "/Account";
         //alert(username + "|" + email + "|" + password + "|" + this.APIBaseUrl + "/Account");
-        $.ajax({
-            url: apiUrl,
-            type: "POST",
-            headers: { 
-                'Accept': 'application/json',
-                'Content-Type': 'application/json' 
-            },
-            data: userRegisterData, 
-            contentType: "application/json",
-            dataType: "json",
-            success: function (response) {
-                var authenticatedUser = JSON.parse(response);
-                //alert("Data Loaded: " + authenticatedUser);
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (this.readyState !== 4) return;
+            if (this.status === 200) {
+                var parsedResponse = JSON.parse(this.responseText);
+                //alert("Data Loaded: " + parsedResponse);
                 if (self.onComplete !== null) {
-                    self.onComplete(authenticatedUser);
-                }                
-            },
-            error: function (xhr, status, error) {
-                //alert(xhr.responseText);
+                    self.onComplete(parsedResponse);
+                }    
+            }
+            else {
                 if (self.onFailed !== null) {
-                    self.onFailed(xhr.responseText);
+                    self.onFailed(this.responseText);
                 }
             }
-        });
+        };
+        xhr.open("POST", apiUrl, true);
+        xhr.setRequestHeader('Accept', 'application/json');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify(userRegisterData));
     };
 };
 
