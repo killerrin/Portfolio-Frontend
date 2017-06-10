@@ -42,13 +42,7 @@ class AccountLogin extends Component {
 
   apiCallCompleted(response) {
     //alert(response);
-    if (this.state.rememberMe) { // Set Expiry Date to a year away
-      Cookies.set("user", response, { expires: 365 });
-    }
-    else { // Use default as it will clear on browser close
-      Cookies.set("user", response);
-    }
-
+    this.accountService.SetLoggedInUser(response, this.state.rememberMe);
     this.forceUpdate();
   }
   apiCallFailed(response) {
