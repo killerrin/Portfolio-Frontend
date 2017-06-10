@@ -7,12 +7,11 @@ class Account extends Component {
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.apiCallCompleted = this.apiCallCompleted.bind(this);
     this.apiCallFailed = this.apiCallFailed.bind(this);
-    this.apiCallAuthCompleted = this.apiCallCompleted.bind(this);
-    this.apiCallAuthFailed = this.apiCallFailed.bind(this);
     this.accountService = new AccountService(this.apiCallCompleted, this.apiCallFailed);
     this.authenticationService = new AuthenticationService(this.apiCallAuthCompleted, this.apiCallAuthFailed);
 
@@ -27,6 +26,8 @@ class Account extends Component {
       currentPassword: "",
 
       accountInfoChanging: false,
+      accountDeleting: false,
+      accountDeleted: false,
       success: "",
       error: ""
     };
@@ -71,6 +72,13 @@ class Account extends Component {
     this.accountService.PreformUpdateAccount(this.state.authUser.id, this.state.authUser.authToken, userUpdate);
   }
 
+  handleDelete(event) {
+    if (confirm("Are you sure you want to delete your account?... This action is PERMANENT")) {
+      this.setState({accountDeleting: true});
+      this.accountService.PreformDeleteAccount(this.state.authUser.id);
+    }
+  }
+
   apiCallCompleted(response) {
     // alert(response);
     if (this.state.accountInfoChanging) {
@@ -89,6 +97,9 @@ class Account extends Component {
 
       this.accountService.SetLoggedInUser(response, false);
     }
+    else if (this.state.accountDeleting) {
+      this.setState({accountDeleted: true});      
+    }
     else {
       this.setState({ 
         user: response,
@@ -105,17 +116,11 @@ class Account extends Component {
     this.setState({error: response});
   }
 
-  apiCallAuthCompleted(response) {
-    //alert(response);
-  }
-  apiCallAuthFailed(response) {
-    //alert(response);
-    this.setState({error: response});
-  }
-
   render() {
     if (!this.accountService.IsUserLoggedIn())
       return(<Redirect to="/account/login"/>);
+    if (this.state.accountDeleted) 
+      return(<Redirect to="/account/logout"/>);
 
     return (
       <div className="container">
@@ -169,6 +174,7 @@ class Account extends Component {
           </div>
           <div className="form-group row">
             <button className="btn btn-lg btn-primary btn-block" type="submit">Save</button>
+            <button className="btn btn-lg btn-primary btn-block" type="button" onClick={>Delete</button>
           </div>
         </form>
       </div>

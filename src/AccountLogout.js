@@ -6,11 +6,12 @@ import Cookies from 'js-cookie';
 class AccountLogout extends Component {
   constructor(props) {
     super(props);
+    this.accountService = new AccountService(this.apiCallCompleted, this.apiCallFailed);
     this.state = { };
   }
 
   render() {
-    Cookies.remove('user');
+    this.accountService.ClearLoggedInUser();
     return(<Redirect to="/account/login"/>);     
   }
 }

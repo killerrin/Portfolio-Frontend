@@ -30,6 +30,9 @@ class AccountService extends APIService {
         var userCookie = Cookies.getJSON('user');
         return userCookie;
     };
+    ClearLoggedInUser() {
+        Cookies.remove('user');
+    };
 
     PreformGetAccount(id, authToken) {
         var self = this;
