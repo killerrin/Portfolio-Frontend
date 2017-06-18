@@ -13,11 +13,18 @@ class TagService extends APIService {
         xhr.onreadystatechange = function () {
             if (this.readyState !== 4) return;
             if (this.status === 200) {
-                var parsedResponse = JSON.parse(this.responseText);
-                //alert("Data Loaded: " + parsedResponse);
-                if (self.onComplete !== null) {
-                    self.onComplete(parsedResponse);
-                }    
+                try {
+                    var parsedResponse = JSON.parse(this.responseText);
+                    //alert("Data Loaded: " + parsedResponse);
+                    if (self.onComplete !== null) {
+                        self.onComplete(parsedResponse);
+                    }    
+                }
+                catch(e) {
+                    if (self.onFailed !== null) {
+                        self.onFailed(this.responseText);
+                    }
+                }
             }
             else {
                 if (self.onFailed !== null) {

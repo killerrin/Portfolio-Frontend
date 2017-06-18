@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link, Redirect  } from 'react-router-dom';
+import AccountManager from './Managers/AccountManager';
 import AccountService, {UserUpdate} from './Services/AccountService';
 import AuthenticationService, {UserLogin} from './Services/AuthenticationService';
 
@@ -12,11 +13,12 @@ class Account extends Component {
     this.componentDidMount = this.componentDidMount.bind(this);
     this.apiCallCompleted = this.apiCallCompleted.bind(this);
     this.apiCallFailed = this.apiCallFailed.bind(this);
+    this.accountManager = new AccountManager();
     this.accountService = new AccountService(this.apiCallCompleted, this.apiCallFailed);
     this.authenticationService = new AuthenticationService(this.apiCallAuthCompleted, this.apiCallAuthFailed);
 
     this.state = {
-      authUser : this.accountService.GetLoggedInUser(),
+      authUser : this.accountManager.GetLoggedInUser(),
       user: {id:0, username:"", email:""},
 
       newUsername: "",
@@ -35,7 +37,7 @@ class Account extends Component {
 
   componentDidMount() {
     // alert("Component Mounted");
-    if (!this.accountService.IsUserLoggedIn()) return;
+    if (!this.accountManager.IsUserLoggedIn()) return;
     this.accountService.PreformGetAccount(this.state.authUser.id, this.state.authUser.authToken);
   }
 
@@ -73,7 +75,7 @@ class Account extends Component {
   }
 
   handleDelete(event) {
-    if (confirm("Are you sure you want to delete your account?... This action is PERMANENT")) {
+    if (window.confirm("Are you sure you want to delete your account?... This action is PERMANENT")) {
       this.setState({accountDeleting: true});
       this.accountService.PreformDeleteAccount(this.state.authUser.id);
     }
@@ -95,7 +97,7 @@ class Account extends Component {
         success: "Account successfully updated"
       });   
 
-      this.accountService.SetLoggedInUser(response, false);
+      this.accountManager.SetLoggedInUser(response, false);
     }
     else if (this.state.accountDeleting) {
       this.setState({accountDeleted: true});      
@@ -117,7 +119,7 @@ class Account extends Component {
   }
 
   render() {
-    if (!this.accountService.IsUserLoggedIn())
+    if (!this.accountManager.IsUserLoggedIn())
       return(<Redirect to="/account/login"/>);
     if (this.state.accountDeleted) 
       return(<Redirect to="/account/logout"/>);
@@ -174,7 +176,7 @@ class Account extends Component {
           </div>
           <div className="form-group row">
             <button className="btn btn-lg btn-primary btn-block" type="submit">Save</button>
-            <button className="btn btn-lg btn-primary btn-block" type="button" onClick={>Delete</button>
+            <button className="btn btn-lg btn-primary btn-block" type="button" onClick={this.handleDelete}>Delete</button>
           </div>
         </form>
       </div>

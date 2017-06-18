@@ -1,39 +1,10 @@
 import APIService from './APIService'
-import Cookies from 'js-cookie';
 
 class AccountService extends APIService {
     constructor(onComplete, onFailed) {
         super(onComplete, onFailed);
     }
-
-    IsUserLoggedIn() {
-        var user = this.GetLoggedInUser();
-        if (user === undefined) {
-            return false;
-        }
-        return true;
-    };
-
-    GetLoggedInUser() {
-        var userCookie = Cookies.getJSON('user');
-        return userCookie;
-    };
-
-    SetLoggedInUser(user, rememberMe) {
-        if (rememberMe) { // Set Expiry Date to a year away
-            Cookies.set("user", user, { expires: 365 });
-        }
-        else { // Use default as it will clear on browser close
-            Cookies.set("user", user);
-        }
-
-        var userCookie = Cookies.getJSON('user');
-        return userCookie;
-    };
-    ClearLoggedInUser() {
-        Cookies.remove('user');
-    };
-
+    
     PreformGetAccount(id, authToken) {
         var self = this;
         var apiUrl = this.APIBaseUrl + "/Account/" + id;
@@ -86,12 +57,6 @@ class AccountService extends APIService {
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.setRequestHeader('Authorization', authToken);
         xhr.send(JSON.stringify(userUpdateData));
-        //{
-        //    currentPassword: userUpdateData.currentPassword,
-        //    newUsername: userUpdateData.newUsername,
-        //    newEmail: userUpdateData.newEmail,
-        //    newPassword: userUpdateData.newPassword
-        //}));
     };
 
     PreformDeleteAccount(id, authToken) {

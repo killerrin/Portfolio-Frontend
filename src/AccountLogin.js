@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import AccountManager from './Managers/AccountManager';
 import AccountService from './Services/AccountService';
 import AuthenticationService, {UserLogin} from './Services/AuthenticationService';
 import './AccountLoginRegister.css';
@@ -21,6 +22,7 @@ class AccountLogin extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.apiCallCompleted = this.apiCallCompleted.bind(this);
     this.apiCallFailed = this.apiCallFailed.bind(this);
+    this.accountManager = new AccountManager();
     this.accountService = new AccountService(this.apiCallCompleted, this.apiCallFailed);
     this.authenticationService = new AuthenticationService(this.apiCallCompleted, this.apiCallFailed);
   }
@@ -42,7 +44,7 @@ class AccountLogin extends Component {
 
   apiCallCompleted(response) {
     //alert(response);
-    this.accountService.SetLoggedInUser(response, this.state.rememberMe);
+    this.accountManager.SetLoggedInUser(response, this.state.rememberMe);
     this.forceUpdate();
   }
   apiCallFailed(response) {
@@ -51,7 +53,7 @@ class AccountLogin extends Component {
   }
 
   render() {
-    if (this.accountService.IsUserLoggedIn())
+    if (this.accountManager.IsUserLoggedIn())
       return(<Redirect to="/account"/>)
 
     return (
